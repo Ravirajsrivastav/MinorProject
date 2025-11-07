@@ -20,10 +20,13 @@ r.post("/generate", upload.single("image"), async (req, res) => {
 
     const { filePath } = await generatePanels({ buffer, genre, prompt, count });
 
-    const relPublic = filePath.split(path.sep).join("/").split("/server")[1];
+     // Ensure the path is relative to the public directory
+    const filename = path.basename(filePath);
+    const publicUrl = `/public/output/${filename}`;
+    
     return res.json({
       ok: true,
-      imageUrl: relPublic,
+      imageUrl: publicUrl,
       meta: { genre, count },
     });
   } catch (err: any) {
